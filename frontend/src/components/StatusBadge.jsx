@@ -1,18 +1,18 @@
 const STYLES = {
-  idle: 'bg-slate-100 text-slate-600',
+  idle: 'bg-sand-100 text-sand-500',
   sending: 'bg-amber-100 text-amber-700',
-  generating: 'bg-brand-100 text-brand-700',
-  saving: 'bg-indigo-100 text-indigo-700',
-  completed: 'bg-emerald-100 text-emerald-700',
-  failed: 'bg-red-100 text-red-700',
+  generating: 'bg-brand-50 text-brand-700',
+  saving: 'bg-brand-50 text-brand-700',
+  completed: 'bg-emerald-50 text-emerald-700',
+  failed: 'bg-red-50 text-red-700',
 };
 
 const LABELS = {
   idle: 'Idle',
-  sending: 'Sending…',
-  generating: 'Generating…',
-  saving: 'Saving…',
-  completed: 'Completed',
+  sending: 'Sending',
+  generating: 'Generating',
+  saving: 'Saving',
+  completed: 'Done',
   failed: 'Failed',
 };
 

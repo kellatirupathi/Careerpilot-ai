@@ -4,53 +4,50 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Confident single-hue indigo. Used deliberately, not everywhere.
         brand: {
-          50: '#eef4ff',
-          100: '#dbe6ff',
-          200: '#bccfff',
-          300: '#8dabff',
-          400: '#577dff',
-          500: '#3355f5',
-          600: '#213ce0',
-          700: '#1b2fb8',
-          800: '#1c2c94',
-          900: '#1c2b75',
+          50: '#f2f3ff',
+          100: '#e6e8ff',
+          200: '#d0d4ff',
+          300: '#adb2ff',
+          400: '#8286ff',
+          500: '#5a5cf5',
+          600: '#4c46e8',
+          700: '#3f37cc',
+          800: '#3530a4',
+          900: '#2f2d82',
         },
-        accent: {
-          400: '#22d3ee',
-          500: '#06b6d4',
-          600: '#0891b2',
+        // Warm gray neutrals (not the default cold slate) — feels human-designed.
+        sand: {
+          50: '#faf9f7',
+          100: '#f4f2ee',
+          200: '#e8e5df',
+          300: '#d6d1c7',
+          400: '#a8a294',
+          500: '#7c7668',
+          600: '#5c5749',
+          700: '#443f34',
+          800: '#2b2822',
+          900: '#1a1813',
         },
-        ink: {
-          900: '#0b1020',
-          800: '#111834',
-          700: '#1c274c',
-        },
+        ink: '#17151f',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Fraunces', 'Georgia', 'serif'],
       },
       boxShadow: {
-        soft: '0 10px 30px -12px rgba(28, 44, 148, 0.25)',
-        glow: '0 0 0 1px rgba(51,85,245,0.08), 0 20px 40px -16px rgba(51,85,245,0.35)',
-      },
-      backgroundImage: {
-        'grid-fade':
-          'radial-gradient(circle at 1px 1px, rgba(51,85,245,0.10) 1px, transparent 0)',
+        card: '0 1px 2px rgba(26,24,19,0.04), 0 8px 24px -16px rgba(26,24,19,0.20)',
+        lift: '0 2px 4px rgba(26,24,19,0.04), 0 18px 40px -20px rgba(79,55,204,0.30)',
       },
       keyframes: {
         'fade-up': {
-          '0%': { opacity: '0', transform: 'translateY(12px)' },
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        float: {
-          '0%,100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-8px)' },
         },
       },
       animation: {
-        'fade-up': 'fade-up 0.5s ease-out both',
-        float: 'float 6s ease-in-out infinite',
+        'fade-up': 'fade-up 0.45s cubic-bezier(0.22,1,0.36,1) both',
       },
     },
   },

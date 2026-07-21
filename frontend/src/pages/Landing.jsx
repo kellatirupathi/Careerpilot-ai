@@ -1,147 +1,154 @@
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
-import {
-  SparklesIcon,
-  BoltIcon,
-  BookIcon,
-  HistoryIcon,
-  ShieldIcon,
-  ChatIcon,
-  ArrowRightIcon,
-  CheckIcon,
-} from '../components/ui/Icons.jsx';
-
-const FEATURES = [
-  { icon: BookIcon, title: 'Beginner-friendly answers', body: 'Every explanation starts with a direct answer, then a clear step-by-step breakdown.' },
-  { icon: BoltIcon, title: 'Practical examples', body: 'Learn with a real example and a common mistake to avoid on every topic.' },
-  { icon: SparklesIcon, title: 'Revision questions', body: 'Three questions after each answer help you check your understanding.' },
-  { icon: HistoryIcon, title: 'Saved conversations', body: 'Reopen past chats anytime — your learning history stays with you.' },
-  { icon: ChatIcon, title: 'Real-time status', body: 'Watch the assistant think with live generation status updates.' },
-  { icon: ShieldIcon, title: 'Private & secure', body: 'Row-level security keeps your data yours. No one else can see your chats.' },
-];
-
-const STEPS = [
-  { n: '01', title: 'Create an account', body: 'Register with your name and email in seconds.' },
-  { n: '02', title: 'Ask a question', body: 'Type any technical topic you want to understand.' },
-  { n: '03', title: 'Learn & revise', body: 'Get a structured explanation and save it for later.' },
-];
-
-const STACK = ['React', 'Node.js + Express', 'Supabase', 'PostgreSQL', 'Gemini API', 'Tailwind CSS'];
+import { ArrowRightIcon, SparklesIcon } from '../components/ui/Icons.jsx';
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-sand-50">
       <Navbar />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-grid-fade [background-size:22px_22px]" />
-        <div className="absolute left-1/2 top-0 -z-10 h-[480px] w-[820px] -translate-x-1/2 rounded-full bg-gradient-to-b from-brand-100/70 to-transparent blur-2xl" />
-
-        <div className="mx-auto max-w-4xl px-4 py-24 text-center">
-          <span className="chip mx-auto border border-brand-200 bg-brand-50 text-brand-700">
-            <SparklesIcon width={14} height={14} /> Learn technical topics faster
+      {/* Hero — asymmetric: copy left, product preview right */}
+      <section className="mx-auto grid max-w-6xl items-center gap-14 px-5 py-16 lg:grid-cols-[1.05fr_1fr] lg:py-24">
+        <div className="animate-fade-up">
+          <span className="inline-flex items-center gap-2 rounded-full border border-sand-200 bg-white px-3 py-1 text-[13px] font-medium text-sand-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
+            For undergraduate students
           </span>
-          <h1 className="mx-auto mt-6 max-w-3xl text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl">
-            Your personal{' '}
-            <span className="bg-gradient-to-r from-brand-600 to-accent-500 bg-clip-text text-transparent">
-              AI Learning Assistant
-            </span>
+          <h1 className="mt-5 font-display text-[2.9rem] font-semibold leading-[1.05] text-ink sm:text-[3.6rem]">
+            Understand hard topics, one clear answer at a time.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
-            Ask any technical question and get clear, beginner-friendly explanations with examples and
-            revision questions — built for undergraduate students.
+          <p className="mt-5 max-w-lg text-lg leading-relaxed text-sand-600">
+            Ask anything technical. Learnwell replies with a direct answer, a step-by-step
+            explanation, a worked example, and questions to test yourself — in plain language.
           </p>
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link to="/register" className="btn-primary px-7 py-3 text-base">
-              Get Started Free <ArrowRightIcon width={18} height={18} />
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link to="/register" className="btn-primary px-5 py-3 text-[15px]">
+              Start learning free <ArrowRightIcon width={17} height={17} />
             </Link>
-            <Link to="/login" className="btn-ghost px-7 py-3 text-base">
-              Login
+            <Link to="/login" className="btn-ghost px-5 py-3 text-[15px]">
+              I already have an account
             </Link>
           </div>
-          <p className="mt-5 flex items-center justify-center gap-2 text-sm text-slate-500">
-            <CheckIcon width={16} height={16} className="text-emerald-500" /> No credit card required
-          </p>
+          <p className="mt-4 text-sm text-sand-400">Free to use · No credit card · Your chats stay private</p>
+        </div>
+
+        <div className="animate-fade-up [animation-delay:120ms]">
+          <ChatPreview />
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="border-y border-slate-100 bg-slate-50/60 py-20">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading eyebrow="How it works" title="From question to understanding in three steps" />
-          <div className="mt-12 grid gap-6 sm:grid-cols-3">
-            {STEPS.map((s) => (
-              <div key={s.n} className="card p-7">
-                <div className="text-sm font-bold text-brand-500">{s.n}</div>
-                <h3 className="mt-3 text-lg font-semibold text-slate-900">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{s.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-20">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading eyebrow="Features" title="Everything you need to learn effectively" />
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((f) => (
-              <div key={f.title} className="card group p-7 transition hover:shadow-glow">
-                <span className="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-600 group-hover:text-white">
-                  <f.icon />
-                </span>
-                <h3 className="mt-4 font-semibold text-slate-900">{f.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{f.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Tech stack */}
-      <section className="border-y border-slate-100 bg-slate-50/60 py-20">
-        <div className="mx-auto max-w-6xl px-4 text-center">
-          <SectionHeading eyebrow="Technology" title="Built on a modern, production-grade stack" center />
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            {STACK.map((t) => (
-              <span key={t} className="rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm">
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20">
-        <div className="mx-auto max-w-5xl px-4">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-700 via-brand-600 to-ink-800 p-12 text-center text-white shadow-glow">
-            <div className="absolute -right-10 -top-10 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
-            <h2 className="text-3xl font-bold">Ready to learn smarter?</h2>
-            <p className="mx-auto mt-3 max-w-xl text-white/80">
-              Join now and get your first beginner-friendly explanation in under a minute.
+      {/* How it works — numbered, editorial, left-aligned */}
+      <section className="border-t border-sand-200 bg-white">
+        <div className="mx-auto max-w-6xl px-5 py-20">
+          <div className="max-w-xl">
+            <p className="text-sm font-medium text-brand-600">How it works</p>
+            <h2 className="mt-2 text-3xl font-semibold text-ink">
+              Every answer follows the same reliable shape.
+            </h2>
+            <p className="mt-3 text-sand-600">
+              No wall of text. The assistant is instructed to always structure its reply so it's
+              easy to follow and easy to revise from.
             </p>
-            <Link to="/register" className="btn mt-8 bg-white px-7 py-3 text-base text-brand-700 hover:bg-slate-100">
-              Create your free account <ArrowRightIcon width={18} height={18} />
-            </Link>
+          </div>
+
+          <div className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              ['Direct answer', 'The short version first, so you get unblocked immediately.'],
+              ['Step-by-step', 'The reasoning broken down into plain, ordered steps.'],
+              ['Worked example', 'One concrete example that shows the idea in practice.'],
+              ['Common mistake', 'The trap most learners fall into — pointed out early.'],
+              ['Revision questions', 'Three questions to check you actually understood.'],
+              ['Saved & searchable', 'Every conversation is kept so you can return to it.'],
+            ].map(([title, body], i) => (
+              <div key={title} className="border-t border-sand-200 pt-5">
+                <div className="font-display text-sm text-sand-400">
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+                <h3 className="mt-1.5 text-lg font-semibold text-ink">{title}</h3>
+                <p className="mt-1.5 text-[15px] leading-relaxed text-sand-600">{body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-slate-200 py-8 text-center text-sm text-slate-500">
-        AI Learning Assistant — built for students.
+      {/* Quiet trust strip */}
+      <section className="mx-auto max-w-6xl px-5 py-20">
+        <div className="rounded-2xl border border-sand-200 bg-white p-10 sm:p-14">
+          <div className="grid gap-10 sm:grid-cols-[1.3fr_1fr] sm:items-center">
+            <div>
+              <h2 className="text-3xl font-semibold text-ink">Built like real software, not a toy.</h2>
+              <p className="mt-4 text-sand-600">
+                A React frontend, an Express API that keeps your keys secret, Supabase for auth and
+                your database with row-level security, and Google Gemini for the answers. Your data
+                is only ever yours.
+              </p>
+              <Link to="/register" className="btn-primary mt-7 px-5 py-3 text-[15px]">
+                Create your account <ArrowRightIcon width={17} height={17} />
+              </Link>
+            </div>
+            <ul className="grid gap-3 text-sm">
+              {['React + Vite', 'Node · Express', 'Supabase (Postgres)', 'Row-level security', 'Google Gemini', 'Real-time status'].map(
+                (t) => (
+                  <li key={t} className="flex items-center gap-2.5 rounded-lg bg-sand-50 px-4 py-2.5 text-sand-700">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand-500" /> {t}
+                  </li>
+                )
+              )}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-sand-200 py-8">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 text-sm text-sand-500">
+          <span className="font-display font-semibold text-ink">Learnwell</span>
+          <span>Built for students.</span>
+        </div>
       </footer>
     </div>
   );
 }
 
-function SectionHeading({ eyebrow, title, center }) {
+/** A faithful, static preview of the actual chat UI. */
+function ChatPreview() {
   return (
-    <div className={center ? 'text-center' : 'mx-auto max-w-2xl text-center'}>
-      <div className="text-sm font-semibold uppercase tracking-wider text-brand-600">{eyebrow}</div>
-      <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">{title}</h2>
+    <div className="rotate-[0.6deg] rounded-2xl border border-sand-200 bg-white shadow-lift">
+      <div className="flex items-center gap-2 border-b border-sand-200 px-4 py-3">
+        <span className="h-2.5 w-2.5 rounded-full bg-sand-200" />
+        <span className="h-2.5 w-2.5 rounded-full bg-sand-200" />
+        <span className="h-2.5 w-2.5 rounded-full bg-sand-200" />
+        <span className="ml-2 text-xs text-sand-400">Learnwell · What is a hash map?</span>
+      </div>
+      <div className="space-y-4 p-5">
+        <div className="flex justify-end">
+          <p className="max-w-[80%] rounded-2xl rounded-tr-sm bg-brand-600 px-3.5 py-2 text-sm text-white">
+            What is a hash map, in simple terms?
+          </p>
+        </div>
+        <div className="flex items-start gap-2.5">
+          <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-600">
+            <SparklesIcon width={14} height={14} />
+          </span>
+          <div className="max-w-[85%] space-y-2.5 rounded-2xl rounded-tl-sm bg-sand-100 px-3.5 py-3 text-sm text-sand-800">
+            <p><span className="font-semibold">Direct answer:</span> a hash map stores key–value pairs so you can look a value up by its key almost instantly.</p>
+            <p className="text-sand-600"><span className="font-semibold text-sand-800">Example:</span> a phone book — you jump straight to a name instead of reading every page.</p>
+            <div className="flex gap-1.5 pt-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-sand-300" />
+              <span className="h-1.5 w-1.5 rounded-full bg-sand-300" />
+              <span className="h-1.5 w-1.5 rounded-full bg-sand-300" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 border-t border-sand-200 p-3">
+        <div className="flex-1 rounded-lg border border-sand-200 px-3 py-2 text-sm text-sand-400">
+          Ask a follow-up…
+        </div>
+        <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white">
+          <ArrowRightIcon width={16} height={16} />
+        </span>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,55 +11,58 @@ body,
 }
 
 body {
-  @apply bg-slate-50 text-slate-800 antialiased;
-  font-feature-settings: 'cv11', 'ss01';
+  @apply bg-sand-50 text-sand-800 antialiased;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight text-ink;
+  }
 }
 
 @layer components {
-  /* Text inputs */
   .field {
-    @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900
-           shadow-sm outline-none transition
-           placeholder:text-slate-400
-           focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15;
+    @apply w-full rounded-lg border border-sand-200 bg-white px-3.5 py-2.5 text-sm text-ink
+           outline-none transition
+           placeholder:text-sand-400
+           focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20;
   }
 
-  /* Buttons */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold
-           transition focus:outline-none focus-visible:ring-4 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium
+           transition focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
-    @apply btn bg-brand-600 text-white shadow-soft hover:bg-brand-700 focus-visible:ring-brand-500/30;
+    @apply btn bg-brand-600 text-white hover:bg-brand-700 focus-visible:ring-brand-500/40;
   }
   .btn-ghost {
-    @apply btn border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus-visible:ring-slate-300/40;
+    @apply btn border border-sand-200 bg-white text-sand-700 hover:border-sand-300 hover:bg-sand-50 focus-visible:ring-sand-300/50;
+  }
+  .btn-subtle {
+    @apply btn text-sand-600 hover:bg-sand-100;
   }
   .btn-danger {
-    @apply btn border border-red-200 bg-white text-red-600 hover:bg-red-50 focus-visible:ring-red-300/40;
+    @apply btn text-sand-500 hover:bg-red-50 hover:text-red-600 focus-visible:ring-red-300/40;
   }
 
-  /* Cards */
   .card {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+    @apply rounded-xl border border-sand-200 bg-white shadow-card;
   }
 
   .label {
-    @apply mb-1.5 block text-sm font-medium text-slate-700;
-  }
-
-  .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium;
+    @apply mb-1.5 block text-[13px] font-medium text-sand-700;
   }
 }
 
-/* Thin scrollbars for chat / lists */
 .scroll-thin::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
+  height: 7px;
 }
 .scroll-thin::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-slate-200;
+  @apply rounded-full bg-sand-200;
 }
 .scroll-thin::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-300;
+  @apply bg-sand-300;
 }

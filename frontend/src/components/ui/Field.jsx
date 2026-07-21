@@ -7,7 +7,7 @@ export function Field({ label, error, children, hint }) {
     <label className="block">
       {label && <span className="label">{label}</span>}
       {children}
-      {hint && !error && <span className="mt-1 block text-xs text-slate-400">{hint}</span>}
+      {hint && !error && <span className="mt-1 block text-xs text-sand-400">{hint}</span>}
       {error && <span className="mt-1 block text-xs font-medium text-red-600">{error}</span>}
     </label>
   );
@@ -38,7 +38,7 @@ export function PasswordInput({ error, ...props }) {
         onClick={() => setShow((s) => !s)}
         aria-label={show ? 'Hide password' : 'Show password'}
         title={show ? 'Hide password' : 'Show password'}
-        className="absolute right-2.5 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+        className="absolute right-2 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-md text-sand-400 transition hover:bg-sand-100 hover:text-sand-600"
       >
         {show ? <EyeOffIcon width={18} height={18} /> : <EyeIcon width={18} height={18} />}
       </button>

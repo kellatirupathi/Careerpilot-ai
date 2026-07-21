@@ -109,47 +109,47 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-slate-50">
+    <div className="flex h-screen flex-col bg-sand-50">
       <Navbar />
-      <div className="mx-auto flex w-full max-w-6xl flex-1 gap-6 overflow-hidden px-4 py-6">
+      <div className="mx-auto flex w-full max-w-6xl flex-1 gap-5 overflow-hidden px-5 py-5">
         {/* Sidebar */}
-        <aside className="hidden w-64 shrink-0 flex-col md:flex">
-          <button onClick={startNewChat} className="btn-primary mb-3 w-full">
+        <aside className="hidden w-60 shrink-0 flex-col md:flex">
+          <button onClick={startNewChat} className="btn-ghost mb-2 w-full justify-start">
             <PlusIcon width={16} height={16} /> New chat
           </button>
-          <div className="scroll-thin flex-1 space-y-1 overflow-y-auto pr-1">
+          <div className="scroll-thin -mr-1 flex-1 space-y-0.5 overflow-y-auto pr-1">
             {conversations.map((c) => (
               <Link
                 key={c.id}
                 to={`/chat/${c.id}`}
-                className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition ${
+                className={`block truncate rounded-lg px-3 py-2 text-sm transition ${
                   c.id === conversationId
-                    ? 'bg-white font-medium text-slate-900 shadow-sm'
-                    : 'text-slate-600 hover:bg-white/70'
+                    ? 'bg-white font-medium text-ink shadow-card'
+                    : 'text-sand-600 hover:bg-white/70'
                 }`}
+                title={c.title}
               >
-                <ChatIcon width={16} height={16} className="shrink-0 text-brand-500" />
-                <span className="truncate">{c.title}</span>
+                {c.title}
               </Link>
             ))}
             {conversations.length === 0 && (
-              <p className="px-3 py-2 text-sm text-slate-400">No conversations yet</p>
+              <p className="px-3 py-2 text-sm text-sand-400">No conversations yet</p>
             )}
           </div>
         </aside>
 
         {/* Chat panel */}
         <section className="card flex flex-1 flex-col overflow-hidden">
-          <header className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
-            <h1 className="truncate font-semibold text-slate-900">
-              {conversation ? conversation.title : 'New Conversation'}
-            </h1>
+          <header className="flex items-center justify-between border-b border-sand-200 px-5 py-3">
+            <h2 className="truncate text-[15px] font-semibold text-ink">
+              {conversation ? conversation.title : 'New conversation'}
+            </h2>
             <StatusBadge status={status} />
           </header>
 
           <div className="scroll-thin flex-1 space-y-5 overflow-y-auto px-5 py-6">
             {loadingConv ? (
-              <Spinner label="Loading conversation…" />
+              <Spinner label="Loading…" />
             ) : messages.length === 0 ? (
               <EmptyState />
             ) : (
@@ -157,9 +157,9 @@ export default function Chat() {
             )}
 
             {(status === 'generating' || (sending && status !== 'failed')) && (
-              <div className="flex items-center gap-3">
+              <div className="flex items-start gap-2.5">
                 <Avatar role="assistant" />
-                <div className="flex items-center gap-1.5 rounded-2xl rounded-tl-sm bg-slate-100 px-4 py-3">
+                <div className="flex items-center gap-1.5 rounded-2xl rounded-tl-sm bg-sand-100 px-4 py-3.5">
                   <Dot /> <Dot delay="150ms" /> <Dot delay="300ms" />
                 </div>
               </div>
@@ -168,13 +168,13 @@ export default function Chat() {
           </div>
 
           {error && (
-            <div className="mx-5 mb-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">
+            <div className="mx-5 mb-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSend} className="border-t border-slate-100 p-4">
-            <div className="flex items-end gap-3">
+          <form onSubmit={handleSend} className="border-t border-sand-200 p-3.5">
+            <div className="flex items-end gap-2.5">
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -184,18 +184,19 @@ export default function Chat() {
                     if (!disabled) handleSend(e);
                   }
                 }}
-                rows={2}
+                rows={1}
                 maxLength={MSG_MAX}
-                placeholder="Ask a technical question…  (Enter to send, Shift+Enter for a new line)"
-                className="scroll-thin field flex-1 resize-none"
+                placeholder="Ask a technical question…"
+                className="scroll-thin field max-h-40 flex-1 resize-none"
               />
-              <button type="submit" disabled={disabled} className="btn-primary h-11 px-5">
-                <SendIcon width={18} height={18} />
-                <span className="hidden sm:inline">{sending ? 'Sending…' : 'Send'}</span>
+              <button type="submit" disabled={disabled} className="btn-primary h-[42px] px-4" title="Send">
+                <SendIcon width={17} height={17} />
+                <span className="hidden sm:inline">Send</span>
               </button>
             </div>
-            <div className="mt-1.5 text-right text-xs text-slate-400">
-              {trimmed.length}/{MSG_MAX}
+            <div className="mt-1.5 flex justify-between px-0.5 text-xs text-sand-400">
+              <span>Enter to send · Shift+Enter for a new line</span>
+              <span>{trimmed.length}/{MSG_MAX}</span>
             </div>
           </form>
         </section>
@@ -208,11 +209,11 @@ function Avatar({ role }) {
   const isUser = role === 'user';
   return (
     <span
-      className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg text-white ${
-        isUser ? 'bg-slate-700' : 'bg-gradient-to-br from-brand-500 to-brand-700'
+      className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg ${
+        isUser ? 'bg-sand-700 text-white' : 'bg-brand-50 text-brand-600'
       }`}
     >
-      {isUser ? <UserIcon width={16} height={16} /> : <SparklesIcon width={16} height={16} />}
+      {isUser ? <UserIcon width={15} height={15} /> : <SparklesIcon width={15} height={15} />}
     </span>
   );
 }
@@ -220,13 +221,11 @@ function Avatar({ role }) {
 function Bubble({ message }) {
   const isUser = message.role === 'user';
   return (
-    <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
+    <div className={`flex items-start gap-2.5 ${isUser ? 'flex-row-reverse' : ''}`}>
       <Avatar role={message.role} />
       <div
-        className={`max-w-[80%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-          isUser
-            ? 'rounded-tr-sm bg-brand-600 text-white'
-            : 'rounded-tl-sm bg-slate-100 text-slate-800'
+        className={`max-w-[82%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed ${
+          isUser ? 'rounded-tr-sm bg-brand-600 text-white' : 'rounded-tl-sm bg-sand-100 text-sand-800'
         }`}
       >
         {message.content}
@@ -236,23 +235,20 @@ function Bubble({ message }) {
 }
 
 function Dot({ delay = '0ms' }) {
-  return (
-    <span
-      className="h-2 w-2 animate-bounce rounded-full bg-slate-400"
-      style={{ animationDelay: delay }}
-    />
-  );
+  return <span className="h-2 w-2 animate-bounce rounded-full bg-sand-300" style={{ animationDelay: delay }} />;
 }
 
 function EmptyState() {
   return (
     <div className="grid h-full place-items-center py-10 text-center">
-      <div>
-        <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-soft">
+      <div className="max-w-sm">
+        <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
           <SparklesIcon />
         </span>
-        <p className="mt-4 text-lg font-semibold text-slate-700">Start the conversation</p>
-        <p className="mt-1 text-sm text-slate-500">Ask about any technical topic to get a clear explanation.</p>
+        <p className="mt-4 font-display text-xl font-semibold text-ink">What do you want to understand?</p>
+        <p className="mt-1.5 text-sm text-sand-500">
+          Ask about any technical topic and get a clear, structured explanation.
+        </p>
       </div>
     </div>
   );

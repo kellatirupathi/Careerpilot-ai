@@ -36,61 +36,50 @@ export default function History() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-sand-50">
       <Navbar />
-      <main className="mx-auto max-w-4xl px-4 py-10">
+      <main className="mx-auto max-w-3xl px-5 py-10">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">Conversation history</h1>
-            <p className="mt-1 text-slate-600">All your saved conversations.</p>
-          </div>
-          <Link to="/chat" className="btn-primary hidden sm:inline-flex">
+          <h1 className="text-3xl font-semibold text-ink">History</h1>
+          <Link to="/chat" className="btn-primary px-4 py-2.5">
             <PlusIcon width={16} height={16} /> New chat
           </Link>
         </div>
 
         {error && (
-          <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
+          <div className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
         )}
 
         {loading ? (
           <div className="mt-8">
-            <Spinner label="Loading history…" />
+            <Spinner label="Loading…" />
           </div>
         ) : conversations.length === 0 ? (
-          <div className="mt-8 grid place-items-center rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
-            <span className="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
-              <ChatIcon />
-            </span>
-            <p className="mt-3 font-medium text-slate-700">No conversations yet</p>
-            <Link to="/chat" className="btn-primary mt-4">
-              <PlusIcon width={16} height={16} /> Start one
+          <div className="mt-8 rounded-xl border border-dashed border-sand-300 bg-white p-12 text-center">
+            <p className="font-medium text-sand-700">Nothing here yet</p>
+            <Link to="/chat" className="btn-primary mt-5 px-4 py-2.5">
+              <PlusIcon width={16} height={16} /> Start a conversation
             </Link>
           </div>
         ) : (
-          <ul className="mt-8 space-y-3">
+          <ul className="mt-8 divide-y divide-sand-200 overflow-hidden rounded-xl border border-sand-200 bg-white">
             {conversations.map((c) => (
-              <li key={c.id} className="card group flex items-center justify-between p-4 transition hover:shadow-soft">
-                <Link to={`/chat/${c.id}`} className="flex min-w-0 flex-1 items-center gap-3">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600">
-                    <ChatIcon width={18} height={18} />
-                  </span>
-                  <span className="min-w-0">
-                    <div className="truncate font-medium text-slate-800">{c.title}</div>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-slate-400">
-                      <StatusBadge status={c.status} />
-                      <span>{new Date(c.updated_at).toLocaleString()}</span>
-                    </div>
-                  </span>
+              <li key={c.id} className="group flex items-center gap-3 px-4 py-3.5 transition hover:bg-sand-50">
+                <ChatIcon width={17} height={17} className="shrink-0 text-sand-400" />
+                <Link to={`/chat/${c.id}`} className="min-w-0 flex-1">
+                  <div className="truncate text-[15px] font-medium text-sand-800">{c.title}</div>
+                  <div className="mt-1 flex items-center gap-2 text-xs text-sand-400">
+                    <StatusBadge status={c.status} />
+                    <span>{new Date(c.updated_at).toLocaleString()}</span>
+                  </div>
                 </Link>
                 <button
                   onClick={(e) => handleDelete(c.id, e)}
                   disabled={deletingId === c.id}
-                  className="btn-danger ml-4 px-3 py-2"
-                  title="Delete conversation"
+                  className="btn-danger px-2.5 py-2 opacity-0 transition group-hover:opacity-100"
+                  title="Delete"
                 >
                   <TrashIcon width={16} height={16} />
-                  <span className="hidden sm:inline">{deletingId === c.id ? 'Deleting…' : 'Delete'}</span>
                 </button>
               </li>
             ))}
