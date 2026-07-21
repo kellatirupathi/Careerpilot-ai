@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,4 +12,54 @@ body,
 
 body {
   @apply bg-slate-50 text-slate-800 antialiased;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+@layer components {
+  /* Text inputs */
+  .field {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900
+           shadow-sm outline-none transition
+           placeholder:text-slate-400
+           focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold
+           transition focus:outline-none focus-visible:ring-4 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-soft hover:bg-brand-700 focus-visible:ring-brand-500/30;
+  }
+  .btn-ghost {
+    @apply btn border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus-visible:ring-slate-300/40;
+  }
+  .btn-danger {
+    @apply btn border border-red-200 bg-white text-red-600 hover:bg-red-50 focus-visible:ring-red-300/40;
+  }
+
+  /* Cards */
+  .card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-slate-700;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium;
+  }
+}
+
+/* Thin scrollbars for chat / lists */
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-slate-200;
+}
+.scroll-thin::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-300;
 }

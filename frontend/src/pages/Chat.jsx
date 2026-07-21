@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import Spinner from '../components/Spinner.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
+import { ChatIcon, PlusIcon, SendIcon, SparklesIcon, UserIcon } from '../components/ui/Icons.jsx';
 import { api } from '../lib/api.js';
 import { useConversationStatus } from '../hooks/useConversationStatus.js';
 
@@ -24,7 +25,6 @@ export default function Chat() {
   const [status, setStatus] = useConversationStatus(conversationId, 'idle');
   const bottomRef = useRef(null);
 
-  // Load sidebar list.
   useEffect(() => {
     api
       .listConversations()
@@ -32,7 +32,6 @@ export default function Chat() {
       .catch((e) => setError(e.message));
   }, [conversationId]);
 
-  // Load the active conversation + messages.
   useEffect(() => {
     if (!conversationId) {
       setConversation(null);
@@ -75,7 +74,6 @@ export default function Chat() {
     if (trimmed.length > MSG_MAX) return setError(`Message must be at most ${MSG_MAX} characters`);
 
     let convId = conversationId;
-    // If no conversation is open, create one first.
     if (!convId) {
       try {
         const { conversation: conv } = await api.createConversation();
@@ -86,7 +84,6 @@ export default function Chat() {
       }
     }
 
-    // Optimistically show the user message.
     const optimistic = {
       id: `tmp-${Date.now()}`,
       role: 'user',
@@ -102,7 +99,6 @@ export default function Chat() {
       const { message } = await api.sendMessage(convId, trimmed);
       setMessages((m) => [...m, message]);
       setStatus('completed');
-      // Refresh sidebar titles.
       api.listConversations().then(({ conversations: c }) => setConversations(c)).catch(() => {});
     } catch (e) {
       setStatus('failed');
@@ -113,46 +109,45 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex h-screen flex-col bg-slate-50">
       <Navbar />
-      <div className="mx-auto flex w-full max-w-6xl flex-1 gap-6 px-4 py-6">
+      <div className="mx-auto flex w-full max-w-6xl flex-1 gap-6 overflow-hidden px-4 py-6">
         {/* Sidebar */}
-        <aside className="hidden w-64 shrink-0 md:block">
-          <button
-            onClick={startNewChat}
-            className="mb-3 w-full rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
-          >
-            + New chat
+        <aside className="hidden w-64 shrink-0 flex-col md:flex">
+          <button onClick={startNewChat} className="btn-primary mb-3 w-full">
+            <PlusIcon width={16} height={16} /> New chat
           </button>
-          <ul className="space-y-1">
+          <div className="scroll-thin flex-1 space-y-1 overflow-y-auto pr-1">
             {conversations.map((c) => (
-              <li key={c.id}>
-                <Link
-                  to={`/chat/${c.id}`}
-                  className={`block truncate rounded-lg px-3 py-2 text-sm hover:bg-slate-100 ${
-                    c.id === conversationId ? 'bg-slate-100 font-medium text-slate-900' : 'text-slate-600'
-                  }`}
-                >
-                  {c.title}
-                </Link>
-              </li>
+              <Link
+                key={c.id}
+                to={`/chat/${c.id}`}
+                className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition ${
+                  c.id === conversationId
+                    ? 'bg-white font-medium text-slate-900 shadow-sm'
+                    : 'text-slate-600 hover:bg-white/70'
+                }`}
+              >
+                <ChatIcon width={16} height={16} className="shrink-0 text-brand-500" />
+                <span className="truncate">{c.title}</span>
+              </Link>
             ))}
             {conversations.length === 0 && (
-              <li className="px-3 py-2 text-sm text-slate-400">No conversations yet</li>
+              <p className="px-3 py-2 text-sm text-slate-400">No conversations yet</p>
             )}
-          </ul>
+          </div>
         </aside>
 
         {/* Chat panel */}
-        <section className="flex flex-1 flex-col rounded-2xl border border-slate-200 bg-white">
-          <header className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+        <section className="card flex flex-1 flex-col overflow-hidden">
+          <header className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
             <h1 className="truncate font-semibold text-slate-900">
               {conversation ? conversation.title : 'New Conversation'}
             </h1>
             <StatusBadge status={status} />
           </header>
 
-          <div className="flex-1 space-y-4 overflow-y-auto px-5 py-6" style={{ minHeight: 320 }}>
+          <div className="scroll-thin flex-1 space-y-5 overflow-y-auto px-5 py-6">
             {loadingConv ? (
               <Spinner label="Loading conversation…" />
             ) : messages.length === 0 ? (
@@ -162,18 +157,23 @@ export default function Chat() {
             )}
 
             {(status === 'generating' || (sending && status !== 'failed')) && (
-              <div className="flex items-center gap-2 text-sm text-slate-500">
-                <Spinner /> The assistant is thinking…
+              <div className="flex items-center gap-3">
+                <Avatar role="assistant" />
+                <div className="flex items-center gap-1.5 rounded-2xl rounded-tl-sm bg-slate-100 px-4 py-3">
+                  <Dot /> <Dot delay="150ms" /> <Dot delay="300ms" />
+                </div>
               </div>
             )}
             <div ref={bottomRef} />
           </div>
 
           {error && (
-            <div className="mx-5 mb-2 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">{error}</div>
+            <div className="mx-5 mb-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">
+              {error}
+            </div>
           )}
 
-          <form onSubmit={handleSend} className="border-t border-slate-200 p-4">
+          <form onSubmit={handleSend} className="border-t border-slate-100 p-4">
             <div className="flex items-end gap-3">
               <textarea
                 value={input}
@@ -186,18 +186,15 @@ export default function Chat() {
                 }}
                 rows={2}
                 maxLength={MSG_MAX}
-                placeholder="Ask a technical question…"
-                className="flex-1 resize-none rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                placeholder="Ask a technical question…  (Enter to send, Shift+Enter for a new line)"
+                className="scroll-thin field flex-1 resize-none"
               />
-              <button
-                type="submit"
-                disabled={disabled}
-                className="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
-              >
-                {sending ? 'Sending…' : 'Send'}
+              <button type="submit" disabled={disabled} className="btn-primary h-11 px-5">
+                <SendIcon width={18} height={18} />
+                <span className="hidden sm:inline">{sending ? 'Sending…' : 'Send'}</span>
               </button>
             </div>
-            <div className="mt-1 text-right text-xs text-slate-400">
+            <div className="mt-1.5 text-right text-xs text-slate-400">
               {trimmed.length}/{MSG_MAX}
             </div>
           </form>
@@ -207,13 +204,29 @@ export default function Chat() {
   );
 }
 
+function Avatar({ role }) {
+  const isUser = role === 'user';
+  return (
+    <span
+      className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg text-white ${
+        isUser ? 'bg-slate-700' : 'bg-gradient-to-br from-brand-500 to-brand-700'
+      }`}
+    >
+      {isUser ? <UserIcon width={16} height={16} /> : <SparklesIcon width={16} height={16} />}
+    </span>
+  );
+}
+
 function Bubble({ message }) {
   const isUser = message.role === 'user';
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
+    <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
+      <Avatar role={message.role} />
       <div
-        className={`max-w-[80%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm ${
-          isUser ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-800'
+        className={`max-w-[80%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+          isUser
+            ? 'rounded-tr-sm bg-brand-600 text-white'
+            : 'rounded-tl-sm bg-slate-100 text-slate-800'
         }`}
       >
         {message.content}
@@ -222,12 +235,24 @@ function Bubble({ message }) {
   );
 }
 
+function Dot({ delay = '0ms' }) {
+  return (
+    <span
+      className="h-2 w-2 animate-bounce rounded-full bg-slate-400"
+      style={{ animationDelay: delay }}
+    />
+  );
+}
+
 function EmptyState() {
   return (
-    <div className="grid h-full place-items-center py-10 text-center text-slate-400">
+    <div className="grid h-full place-items-center py-10 text-center">
       <div>
-        <p className="text-lg font-medium text-slate-500">Start the conversation</p>
-        <p className="mt-1 text-sm">Ask about any technical topic to get a clear explanation.</p>
+        <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-soft">
+          <SparklesIcon />
+        </span>
+        <p className="mt-4 text-lg font-semibold text-slate-700">Start the conversation</p>
+        <p className="mt-1 text-sm text-slate-500">Ask about any technical topic to get a clear explanation.</p>
       </div>
     </div>
   );

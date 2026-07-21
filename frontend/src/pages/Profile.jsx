@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar.jsx';
 import Spinner from '../components/Spinner.jsx';
-import { Field, FieldStyles } from './Login.jsx';
+import { Field, TextInput } from '../components/ui/Field.jsx';
+import { UserIcon } from '../components/ui/Icons.jsx';
 import { api } from '../lib/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 
@@ -27,7 +28,6 @@ export default function Profile() {
         setEmail(profile?.email || user.email || '');
       })
       .catch(() => {
-        // No profile yet — seed from auth metadata.
         setFullName(user.user_metadata?.full_name || '');
         setEmail(user.email || '');
       })
@@ -52,9 +52,8 @@ export default function Profile() {
     if (!validate()) return;
     setSaving(true);
     try {
-      // Upsert so it works whether or not a profile row exists yet.
       await api.saveProfile(fullName.trim(), email.trim());
-      setMessage('Profile saved.');
+      setMessage('Profile saved successfully.');
     } catch (e) {
       setError(e.message);
     } finally {
@@ -62,11 +61,18 @@ export default function Profile() {
     }
   }
 
+  const initials = (fullName || email || 'U')
+    .split(' ')
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       <Navbar />
-      <main className="mx-auto max-w-md px-4 py-10">
-        <h1 className="text-2xl font-bold text-slate-900">Your profile</h1>
+      <main className="mx-auto max-w-2xl px-4 py-10">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Your profile</h1>
         <p className="mt-1 text-slate-600">Manage your account details.</p>
 
         {loading ? (
@@ -74,32 +80,44 @@ export default function Profile() {
             <Spinner label="Loading profile…" />
           </div>
         ) : (
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
-            {message && (
-              <div className="mb-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</div>
-            )}
-            {error && (
-              <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
-            )}
-            <form onSubmit={handleSave} className="space-y-4" noValidate>
-              <Field label="Full name" error={errors.fullName}>
-                <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="input" />
-              </Field>
-              <Field label="Email" error={errors.email}>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input" />
-              </Field>
-              <button
-                type="submit"
-                disabled={saving}
-                className="w-full rounded-lg bg-brand-600 px-4 py-2.5 font-medium text-white hover:bg-brand-700 disabled:opacity-60"
-              >
-                {saving ? 'Saving…' : 'Save changes'}
-              </button>
-            </form>
+          <div className="card mt-6 overflow-hidden">
+            {/* Header band */}
+            <div className="flex items-center gap-4 border-b border-slate-100 bg-gradient-to-r from-brand-50 to-slate-50 p-6">
+              <div className="grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-xl font-bold text-white shadow-soft">
+                {initials || <UserIcon />}
+              </div>
+              <div className="min-w-0">
+                <div className="truncate text-lg font-semibold text-slate-900">{fullName || 'Your name'}</div>
+                <div className="truncate text-sm text-slate-500">{email}</div>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {message && (
+                <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                  {message}
+                </div>
+              )}
+              {error && (
+                <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {error}
+                </div>
+              )}
+              <form onSubmit={handleSave} className="space-y-5" noValidate>
+                <Field label="Full name" error={errors.fullName}>
+                  <TextInput value={fullName} onChange={(e) => setFullName(e.target.value)} error={errors.fullName} />
+                </Field>
+                <Field label="Email" error={errors.email}>
+                  <TextInput type="email" value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email} />
+                </Field>
+                <button type="submit" disabled={saving} className="btn-primary w-full">
+                  {saving ? 'Saving…' : 'Save changes'}
+                </button>
+              </form>
+            </div>
           </div>
         )}
       </main>
-      <FieldStyles />
     </div>
   );
 }

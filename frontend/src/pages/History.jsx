@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import Spinner from '../components/Spinner.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
+import { ChatIcon, TrashIcon, PlusIcon } from '../components/ui/Icons.jsx';
 import { api } from '../lib/api.js';
 
 export default function History() {
@@ -19,7 +20,9 @@ export default function History() {
       .finally(() => setLoading(false));
   }, []);
 
-  async function handleDelete(id) {
+  async function handleDelete(id, ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
     if (!window.confirm('Delete this conversation? This cannot be undone.')) return;
     setDeletingId(id);
     try {
@@ -33,14 +36,21 @@ export default function History() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       <Navbar />
       <main className="mx-auto max-w-4xl px-4 py-10">
-        <h1 className="text-2xl font-bold text-slate-900">Conversation history</h1>
-        <p className="mt-1 text-slate-600">All your saved conversations.</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">Conversation history</h1>
+            <p className="mt-1 text-slate-600">All your saved conversations.</p>
+          </div>
+          <Link to="/chat" className="btn-primary hidden sm:inline-flex">
+            <PlusIcon width={16} height={16} /> New chat
+          </Link>
+        </div>
 
         {error && (
-          <div className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
+          <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
         )}
 
         {loading ? (
@@ -48,33 +58,39 @@ export default function History() {
             <Spinner label="Loading history…" />
           </div>
         ) : conversations.length === 0 ? (
-          <div className="mt-8 rounded-xl border border-dashed border-slate-300 p-10 text-center text-slate-500">
-            No conversations yet.{' '}
-            <Link to="/chat" className="font-medium text-brand-600 hover:underline">
-              Start one
+          <div className="mt-8 grid place-items-center rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
+            <span className="grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <ChatIcon />
+            </span>
+            <p className="mt-3 font-medium text-slate-700">No conversations yet</p>
+            <Link to="/chat" className="btn-primary mt-4">
+              <PlusIcon width={16} height={16} /> Start one
             </Link>
-            .
           </div>
         ) : (
           <ul className="mt-8 space-y-3">
             {conversations.map((c) => (
-              <li
-                key={c.id}
-                className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-4"
-              >
-                <Link to={`/chat/${c.id}`} className="min-w-0 flex-1">
-                  <div className="truncate font-medium text-slate-800">{c.title}</div>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-slate-400">
-                    <StatusBadge status={c.status} />
-                    <span>{new Date(c.updated_at).toLocaleString()}</span>
-                  </div>
+              <li key={c.id} className="card group flex items-center justify-between p-4 transition hover:shadow-soft">
+                <Link to={`/chat/${c.id}`} className="flex min-w-0 flex-1 items-center gap-3">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600">
+                    <ChatIcon width={18} height={18} />
+                  </span>
+                  <span className="min-w-0">
+                    <div className="truncate font-medium text-slate-800">{c.title}</div>
+                    <div className="mt-1 flex items-center gap-2 text-xs text-slate-400">
+                      <StatusBadge status={c.status} />
+                      <span>{new Date(c.updated_at).toLocaleString()}</span>
+                    </div>
+                  </span>
                 </Link>
                 <button
-                  onClick={() => handleDelete(c.id)}
+                  onClick={(e) => handleDelete(c.id, e)}
                   disabled={deletingId === c.id}
-                  className="ml-4 rounded-lg border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
+                  className="btn-danger ml-4 px-3 py-2"
+                  title="Delete conversation"
                 >
-                  {deletingId === c.id ? 'Deleting…' : 'Delete'}
+                  <TrashIcon width={16} height={16} />
+                  <span className="hidden sm:inline">{deletingId === c.id ? 'Deleting…' : 'Delete'}</span>
                 </button>
               </li>
             ))}

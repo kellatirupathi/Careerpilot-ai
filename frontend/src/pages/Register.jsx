@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase.js';
 import { api } from '../lib/api.js';
-import Navbar from '../components/Navbar.jsx';
-import { Field, FieldStyles } from './Login.jsx';
+import AuthLayout from '../components/AuthLayout.jsx';
+import { Field, TextInput, PasswordInput } from '../components/ui/Field.jsx';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -38,7 +38,11 @@ export default function Register() {
     const { data, error } = await supabase.auth.signUp({
       email: form.email.trim(),
       password: form.password,
-      options: { data: { full_name: form.fullName.trim() } },
+      options: {
+        data: { full_name: form.fullName.trim() },
+        // Send users back to the deployed app (not localhost) after confirming.
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
     });
 
     if (error) {
@@ -65,75 +69,72 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <div className="mx-auto max-w-md px-4 py-16">
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h1 className="text-2xl font-bold text-slate-900">Create your account</h1>
-          <p className="mt-1 text-sm text-slate-600">Start learning with your AI assistant.</p>
-
-          {serverError && (
-            <div className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{serverError}</div>
-          )}
-          {notice && (
-            <div className="mt-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{notice}</div>
-          )}
-
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
-            <Field label="Full name" error={errors.fullName}>
-              <input
-                value={form.fullName}
-                onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                className="input"
-                placeholder="Ada Lovelace"
-              />
-            </Field>
-            <Field label="Email" error={errors.email}>
-              <input
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="input"
-                placeholder="you@example.com"
-              />
-            </Field>
-            <Field label="Password" error={errors.password}>
-              <input
-                type="password"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="input"
-                placeholder="At least 8 characters"
-              />
-            </Field>
-            <Field label="Confirm password" error={errors.confirm}>
-              <input
-                type="password"
-                value={form.confirm}
-                onChange={(e) => setForm({ ...form, confirm: e.target.value })}
-                className="input"
-                placeholder="Re-enter password"
-              />
-            </Field>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-lg bg-brand-600 px-4 py-2.5 font-medium text-white hover:bg-brand-700 disabled:opacity-60"
-            >
-              {loading ? 'Creating account…' : 'Create account'}
-            </button>
-          </form>
-
-          <p className="mt-6 text-center text-sm text-slate-600">
-            Already have an account?{' '}
-            <Link to="/login" className="font-medium text-brand-600 hover:underline">
-              Log in
-            </Link>
-          </p>
+    <AuthLayout
+      title="Create your account"
+      subtitle="Start learning with your personal AI assistant."
+      footer={
+        <>
+          Already have an account?{' '}
+          <Link to="/login" className="font-semibold text-brand-600 hover:underline">
+            Log in
+          </Link>
+        </>
+      }
+    >
+      {serverError && (
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {serverError}
         </div>
-      </div>
-      <FieldStyles />
-    </div>
+      )}
+      {notice && (
+        <div className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          {notice}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+        <Field label="Full name" error={errors.fullName}>
+          <TextInput
+            value={form.fullName}
+            onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+            error={errors.fullName}
+            placeholder="Ada Lovelace"
+            autoComplete="name"
+          />
+        </Field>
+        <Field label="Email" error={errors.email}>
+          <TextInput
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            error={errors.email}
+            placeholder="you@example.com"
+            autoComplete="email"
+          />
+        </Field>
+        <Field label="Password" error={errors.password} hint="At least 8 characters">
+          <PasswordInput
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            error={errors.password}
+            placeholder="Create a password"
+            autoComplete="new-password"
+          />
+        </Field>
+        <Field label="Confirm password" error={errors.confirm}>
+          <PasswordInput
+            value={form.confirm}
+            onChange={(e) => setForm({ ...form, confirm: e.target.value })}
+            error={errors.confirm}
+            placeholder="Re-enter password"
+            autoComplete="new-password"
+          />
+        </Field>
+
+        <button type="submit" disabled={loading} className="btn-primary w-full">
+          {loading ? 'Creating account…' : 'Create account'}
+        </button>
+      </form>
+    </AuthLayout>
   );
 }
