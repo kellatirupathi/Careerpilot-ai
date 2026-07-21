@@ -5,6 +5,10 @@ topics. Students register, ask questions, and receive beginner-friendly explanat
 (direct answer → step-by-step → example → common mistake → revision questions).
 Conversations are saved per user, reopenable, and show real-time generation status.
 
+> 📘 **New here? Read the [Complete Deployment Guide](DEPLOYMENT_GUIDE.md)** — a step-by-step,
+> student-friendly walkthrough covering account creation, getting Supabase credentials and the
+> Gemini API key, and deploying the backend (Render) and frontend (Vercel).
+
 ## Features
 
 - Landing, Register, Login pages
