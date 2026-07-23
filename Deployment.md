@@ -1,4 +1,4 @@
-# 🚀 Common Deployment Guide for Full-Stack Gemini AI Assignments
+# 🚀 Deployment Guide for Full-Stack Gemini AI Assignments
 
 > A reusable deployment guide for all assignments built with **React.js**, **Node.js/Express**, a supported database, and the **Google Gemini API**.
 >
